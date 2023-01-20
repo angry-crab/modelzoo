@@ -15,14 +15,14 @@
 
 set -e
 
-TVM_VERSION="v0.10.0"
-TVM_BASE_DIR="/tmp/tvm"
-TVM_BUILD_DIR="${TVM_BASE_DIR}/build"
-TVM_BUILD_CONFIG="${TVM_BUILD_DIR}/config.cmake"
-DLPACK_BASE_DIR="${TVM_BASE_DIR}/3rdparty/dlpack"
-DLPACK_BUILD_DIR="${DLPACK_BASE_DIR}/build"
-DLPACKCPP_HEADER_DIR="${DLPACK_BASE_DIR}/contrib/dlpack"
-DLPACKCPP_INSTALL_DIR="/usr/local/include/"
+# TVM_VERSION="v0.10.0"
+# TVM_BASE_DIR="/tmp/tvm"
+# TVM_BUILD_DIR="${TVM_BASE_DIR}/build"
+# TVM_BUILD_CONFIG="${TVM_BUILD_DIR}/config.cmake"
+# DLPACK_BASE_DIR="${TVM_BASE_DIR}/3rdparty/dlpack"
+# DLPACK_BUILD_DIR="${DLPACK_BASE_DIR}/build"
+# DLPACKCPP_HEADER_DIR="${DLPACK_BASE_DIR}/contrib/dlpack"
+# DLPACKCPP_INSTALL_DIR="/usr/local/include/"
 
 # install dependencies
 apt-get update
@@ -64,54 +64,54 @@ fi
 rm -rf /var/lib/apt/lists/*
 python3 -m pip install --upgrade pip
 pip3 install mypy orderedset "antlr4-python3-runtime>=4.7,<4.8" \
-  psutil "xgboost==1.5.*" tornado cython
+  psutil "xgboost==1.5.*" tornado cython cloudpickle
 
 # clone tvm and create build directory
-git clone --branch ${TVM_VERSION} --recursive \
-    https://github.com/apache/tvm ${TVM_BASE_DIR}
-# Apply bugfix from https://github.com/apache/tvm/pull/13341
-git -C ${TVM_BASE_DIR} cherry-pick a16a8904833e9c72aa7571ca336e781d89c128aa --no-commit
-mkdir -p ${TVM_BUILD_DIR}
+# git clone --branch ${TVM_VERSION} --recursive \
+#     https://github.com/apache/tvm ${TVM_BASE_DIR}
+# # Apply bugfix from https://github.com/apache/tvm/pull/13341
+# git -C ${TVM_BASE_DIR} cherry-pick a16a8904833e9c72aa7571ca336e781d89c128aa --no-commit
+# mkdir -p ${TVM_BUILD_DIR}
 
-# copy a default configuration file
-cp ${TVM_BASE_DIR}/cmake/config.cmake ${TVM_BUILD_DIR}
+# # copy a default configuration file
+# cp ${TVM_BASE_DIR}/cmake/config.cmake ${TVM_BUILD_DIR}
 
-# turn on features
-{
-    echo "set(INSTALL_DEV TRUE)"
-    echo "set(USE_LLVM llvm-config-8)"
-    echo "set(USE_SORT ON)"
-    echo "set(USE_GRAPH_RUNTIME ON)"
-    echo "set(USE_BLAS openblas)"
-    echo "set(USE_OPENCL ON)"
-    echo "set(USE_VULKAN ON)"
-} >> ${TVM_BUILD_CONFIG}
-if [[ -d "/usr/local/cuda" ]]; then
-    echo "set(USE_CUDA ON)" >> ${TVM_BUILD_CONFIG}
-fi
+# # turn on features
+# {
+#     echo "set(INSTALL_DEV TRUE)"
+#     echo "set(USE_LLVM llvm-config-8)"
+#     echo "set(USE_SORT ON)"
+#     echo "set(USE_GRAPH_RUNTIME ON)"
+#     echo "set(USE_BLAS openblas)"
+#     echo "set(USE_OPENCL ON)"
+#     echo "set(USE_VULKAN ON)"
+# } >> ${TVM_BUILD_CONFIG}
+# if [[ -d "/usr/local/cuda" ]]; then
+#     echo "set(USE_CUDA ON)" >> ${TVM_BUILD_CONFIG}
+# fi
 
-# build and install tvm
-pushd ${TVM_BUILD_DIR}
-cmake ${TVM_BASE_DIR} -G Ninja
-ninja
-ninja install
-popd
+# # build and install tvm
+# pushd ${TVM_BUILD_DIR}
+# cmake ${TVM_BASE_DIR} -G Ninja
+# ninja
+# ninja install
+# popd
 
-# install python extensions
-pushd ${TVM_BASE_DIR}/python
-python3 setup.py install
-popd
+# # install python extensions
+# pushd ${TVM_BASE_DIR}/python
+# python3 setup.py install
+# popd
 
-# install dlpack headers
-mkdir -p ${DLPACK_BUILD_DIR}
-pushd ${DLPACK_BUILD_DIR}
-cmake ${DLPACK_BASE_DIR} -G Ninja
-ninja
-ninja install
-popd
+# # install dlpack headers
+# mkdir -p ${DLPACK_BUILD_DIR}
+# pushd ${DLPACK_BUILD_DIR}
+# cmake ${DLPACK_BASE_DIR} -G Ninja
+# ninja
+# ninja install
+# popd
 
-# install dlpackcpp headers
-cp -r ${DLPACKCPP_HEADER_DIR} ${DLPACKCPP_INSTALL_DIR}
+# # install dlpackcpp headers
+# cp -r ${DLPACKCPP_HEADER_DIR} ${DLPACKCPP_INSTALL_DIR}
 
-# clean up
-rm -rf ${TVM_BASE_DIR}
+# # clean up
+# rm -rf ${TVM_BASE_DIR}

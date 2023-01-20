@@ -16,11 +16,11 @@
 set -e
 
 IMAGE_NAME="autoware/model-zoo-tvm-cli"
-TAG_NAME="local"
-FROM_ARG="ubuntu:20.04"
-TARGET_PLATFORM="arm64"
-if [[ $(uname -a) == *"x86_64"* ]]; then
-    TARGET_PLATFORM="amd64"
+TAG_NAME="play"
+FROM_ARG="ubuntu:22.04"
+TARGET_PLATFORM="amd64"
+if [[ $(uname -a) == *"arm"* ]]; then
+    TARGET_PLATFORM="arm64"
 fi
 CI_BUILD="false"
 
