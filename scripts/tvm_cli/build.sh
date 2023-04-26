@@ -46,7 +46,7 @@ eval set -- "$OPTS"
 while true; do
   case $1 in
     -c|--cuda)
-      FROM_ARG="nvidia/cuda:11.6.2-devel-ubuntu20.04"
+      FROM_ARG="nvidia/cuda:11.6.2-devel-ubuntu22.04"
       shift 1
       ;;
     -h|--help)

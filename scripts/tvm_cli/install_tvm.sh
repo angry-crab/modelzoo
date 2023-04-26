@@ -27,9 +27,9 @@ set -e
 # install dependencies
 apt-get update
 apt-get install -y --no-install-recommends \
-        ca-certificates ninja-build git python \
-        cmake libopenblas-dev g++ llvm-8 llvm-8-dev clang-9 \
-        python3.8 python3.8-dev python3-setuptools python3-pip antlr4 \
+        ca-certificates ninja-build git \
+        cmake libopenblas-dev g++ llvm-14 llvm-14-dev clang \
+        python3.10 python3.10-dev python3-setuptools python3-pip antlr4 \
         build-essential
 
 # install opencl
@@ -52,7 +52,7 @@ echo "{ \"file_format_version\" : \"1.0.0\", \"ICD\": { \"library_path\":
     \"libEGL_nvidia.so.0\" } }" > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
 
 # link clang-9 to be the default clang
-update-alternatives --install /usr/bin/clang clang /usr/bin/clang-9 100
+# update-alternatives --install /usr/bin/clang clang /usr/bin/clang 100
 
 # install cross-compile toolchain
 if [ "$(uname -i)" != "aarch64" ]; then
@@ -66,6 +66,7 @@ python3 -m pip install --upgrade pip
 pip3 install mypy orderedset "antlr4-python3-runtime>=4.7,<4.8" \
   psutil "xgboost==1.5.*" tornado cython cloudpickle
 
+pip3 install decorator attrs
 # clone tvm and create build directory
 # git clone --branch ${TVM_VERSION} --recursive \
 #     https://github.com/apache/tvm ${TVM_BASE_DIR}
